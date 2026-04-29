@@ -4,7 +4,7 @@ const url = () =>{
     }
     else {
         //return 'https://' + window.location.host + '/api/'
-        return 'https://as-reportsquestcc-back-dev-01.azurewebsites.net'
+        return 'https://as-reportsquestcc-back-dev-01.azurewebsites.net/api/'
     }
 }
 
