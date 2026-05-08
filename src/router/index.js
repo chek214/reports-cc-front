@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
-import NewUsers from '../views/NewUsers.vue'
 
 function checkauth () {
   const auth = useAuthStore()
@@ -22,11 +21,6 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
-    },
-    {
-      path: '/newusers',
-      name: 'newusers',
-      component: NewUsers
     }
   ]
 })
