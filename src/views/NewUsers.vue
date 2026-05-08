@@ -23,7 +23,7 @@ async function handleReportNewUser() {
         usersDataError.value = response.message
         throw new Error(response.message)
       }
-      usersData = response
+      usersData.value = response
       loading.value = false
     } catch (error) {
       console.log(error)
