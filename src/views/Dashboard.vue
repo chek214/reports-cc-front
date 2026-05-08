@@ -2,11 +2,9 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import url from '@/functions/baseUrl'
-import { useRouter } from 'vue-router'
 
 const auth = useAuthStore()
 const baseUrl = url()
-const router =  useRouter()
 
 const fetchHeaders = {
   'Content-type': 'application/json;charset=UTF-8',
@@ -44,16 +42,46 @@ async function handleReportNewUser() {
       } else {
         usersData.value = response.data.filter((user) => user.profile)
       }
+
+      for (let user of usersData.value) { 
+        if (user.profile && user.profile != {}) {
+          try {
+            let plan = []
+            if (user.profile.plan_especialidad != null) {
+              plan.push(user.profile.plan_especialidad)
+            }
+            if (user.profile.plan_maestria != null) {
+              plan.push(user.profile.plan_maestria)
+            }
+            if (user.profile.plan_master != null) {
+              plan.push(user.profile.plan_especialidad)
+            }
+            if (user.profile.plan_licenciatura != null) {
+              plan.push(user.profile.plan_licenciatura)
+            }
+            user.profile.plan = plan
+          } catch {
+            user.profile.plan = []
+          }
+          
+
+          try {
+            if (user.profile.tipo_usuario.selectedValues.Usuario = '997e0db0-1cd0-43df-b9af-8a2a6c42e49d') {
+              user.profile.tipo_usuario = 'Usuario - Nuevo ingreso ( Primer ciclo en la institucion) '
+            }
+            if (user.profile.tipo_usuario.selectedValues.Usuario = '2302b585-af72-4361-bdba-89a59de047c2') {
+              user.profile.tipo_usuario = 'Usuario - Reingreso ( Continuidad de estudio) '
+            }
+          } catch {
+          }
+          
+        }
+      }
       loading.value = false
     } catch (error) {
       console.log(error)
       loading.value = false
     } 
-}
-
-async function view(user) {
-  await viewUser.set(user)
-  router.push({name: 'user'})
 }
 
 </script>
@@ -107,11 +135,13 @@ async function view(user) {
             <td>{{!user.profile?.matricula_t0 ? 'Onboarding no completado' : user.profile?.matricula_t0}}</td>
             <td>{{!user.profile?.whatsapp_contacto ? 'Onboarding no completado' : user.profile?.whatsapp_contacto}}</td>
             <td>{{!user.profile?.nivel_academico ? 'Onboarding no completado' : user.profile?.nivel_academico}}</td>
-            <td v-if="user.profile?.plan_maestria">{{user.profile?.plan_maestria}}</td>
-            <td v-if="user.profile?.plan_master">{{user.profile?.plan_master}}</td>
-            <td v-if="user.profile?.plan_licenciatura">{{user.profile?.plan_licenciatura}}</td>
-            <td v-if="user.profile?.plan_especialidad">{{user.profile?.plan_especialidad}}</td>
-            <td v-if="!user.profile?.plan_especialidad && !user.profile?.plan_licenciatura && !user.profile?.plan_master && !user.profile?.plan_maestria">Onboarding no completado</td>
+            <td v-if="user.profile?.plan && user.profile?.plan?.length > 0">
+              <ol v-if="user.profile?.plan?.length > 1">
+                <li v-for="plan in user.profile?.plan"><span> {{ plan }}</span></li>
+              </ol>
+              <div v-else><span v-for="plan in user.profile?.plan">{{ plan }}</span></div>
+            </td>
+            <td v-else>Onboarding no completado</td>
             <td>{{!user.profile?.tipo_usuario ? 'Onboarding no completado' : user.profile?.tipo_usuario}}</td>
           </tr>
           </tbody>
